@@ -6,7 +6,7 @@ import jworg from '../stations/jw.org.json';
 export class StationController {
 
     stations: Station[] = [jworg];
-    
+
     @GET
     list(): Station[] {
         return this.stations;

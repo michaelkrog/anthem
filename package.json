@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
+    "express-sse-ts": "^1.0.2",
     "gstreamer-superficial": "^1.7.3",
     "typescript-ioc": "^3.2.2",
     "typescript-rest": "^3.0.4",
