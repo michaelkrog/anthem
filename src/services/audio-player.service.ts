@@ -13,10 +13,21 @@ export class AudioPlayerService {
     eventService: EventService;
 
     _list: MediaItem[] = [];
-    index = 0;
+    _index = -1;
     pipeline: any;
     _state: State = 'stopped';
     durationEventTimer: number;
+
+    private get index (): number {
+        return this._index;
+    }
+
+    private set index(value: number) {
+        if(this._index !== value) {
+            this._index = value;
+            this.eventService.emit(new Event('itemChanged', this.getSelectedItem()));
+        }
+    }
 
     get state(): State {
         return this._state;
@@ -45,11 +56,38 @@ export class AudioPlayerService {
     }
 
     get list() {
-        return this._list;
+        return [...this._list];
+    }
+
+    addItem(item: MediaItem) {
+        this._list.push(item);
+        if(this.index < 0) {
+            this.index = 0;
+        }
+    }
+
+    removeItem(index: number) {
+        if(index >= 0 && index < this._list.length - 1) {
+            this._list.splice(index, 1);
+        }
+
+        this.index = this._list.length > 0 ? Math.min(this._list.length - 1, this.index) : -1;
+    }
+
+    getItemCount() {
+        return this._list.length;
+    }
+
+    getSelectedItem(): MediaItem {
+        if(this.index >= 0) {
+            return this._list[this.index];
+        } else {
+            return null;
+        }
     }
 
     play() {
-        if(this.state === 'playing') return;
+        if(this.state === 'playing' || this.index < 0) return;
         if(this._list.length > this.index) {
             const mediaItem = this._list[this.index];
             // tslint:disable-next-line:no-console

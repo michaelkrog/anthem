@@ -16,7 +16,7 @@ export class PlaylistController {
 
     @POST
     create(mediaItem: MediaItem): MediaItem {
-        this.service.list.push(mediaItem);
+        this.service.addItem(mediaItem);
         return mediaItem;
     }
 
