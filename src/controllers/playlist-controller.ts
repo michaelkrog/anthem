@@ -1,52 +1,44 @@
-import { MediaItem } from "../models/media-item";
-import { GET, Path, POST, PUT } from "typescript-rest";
-import { AudioPlayerService } from "../services/audio-player.service";
-import { Inject } from "typescript-ioc";
+import { Controller, Get, Post, Put } from '@nestjs/common';
+import { MediaItem } from '../models/media-item';
+import { AudioPlayerService } from '../services/audio-player.service';
 
-@Path("/playlist")
+@Controller('/playlist')
 export class PlaylistController {
+  constructor(private service: AudioPlayerService) {}
 
-    @Inject
-    service: AudioPlayerService;
+  @Get()
+  list(): MediaItem[] {
+    return this.service.list;
+  }
 
-    @GET
-    list(): MediaItem[] {
-        return this.service.list;
-    }
+  @Post()
+  create(mediaItem: MediaItem): MediaItem {
+    this.service.addItem(mediaItem);
+    return mediaItem;
+  }
 
-    @POST
-    create(mediaItem: MediaItem): MediaItem {
-        this.service.addItem(mediaItem);
-        return mediaItem;
-    }
+  @Put('/actions/play')
+  play(): void {
+    this.service.play();
+  }
 
-    @Path('/actions/play')
-    @PUT
-    play(): void {
-        this.service.play();
-    }
+  @Put('/actions/stop')
+  stop(): void {
+    this.service.stop();
+  }
 
-    @Path('/actions/stop')
-    @PUT
-    stop(): void {
-        this.service.stop();
-    }
+  @Put('/actions/pause')
+  pause(): void {
+    this.service.pause();
+  }
 
-    @Path('/actions/pause')
-    @PUT
-    pause(): void {
-        this.service.pause();
-    }
+  @Put('/actions/next')
+  next(): void {
+    this.service.next();
+  }
 
-    @Path('/actions/next')
-    @PUT
-    next(): void {
-        this.service.next();
-    }
-
-    @Path('/actions/previous')
-    @PUT
-    previous(): void {
-        this.service.previous();
-    }
+  @Put('/actions/previous')
+  previous(): void {
+    this.service.previous();
+  }
 }

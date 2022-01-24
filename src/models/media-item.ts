@@ -1,5 +1,5 @@
 export class MediaItem {
-    title: string;
-    url: string;
-    cover: string;
+  title: string;
+  url: string;
+  cover: string;
 }

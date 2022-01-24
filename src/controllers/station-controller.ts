@@ -1,15 +1,13 @@
-import { GET, Path, POST, PUT } from "typescript-rest";
-import { Station } from "../models/station";
+import { Controller, Get } from '@nestjs/common';
 import jworg from '../stations/jw.org.json';
+import { Station } from '../models/station';
 
-@Path("/stations")
+@Controller('/stations')
 export class StationController {
+  stations: Station[] = [jworg];
 
-    stations: Station[] = [jworg];
-
-    @GET
-    list(): Station[] {
-        return this.stations;
-    }
-
+  @Get()
+  list(): Station[] {
+    return this.stations;
+  }
 }

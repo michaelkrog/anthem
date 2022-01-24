@@ -1,6 +1,6 @@
-import { MediaItem } from "./media-item";
+import { MediaItem } from './media-item';
 
 export class Station {
-    name: string;
-    media: MediaItem[];
+  name: string;
+  media: MediaItem[];
 }

@@ -1,23 +1,18 @@
-import { NextFunction, Request, Response } from "express";
-import SSE from "express-sse-ts";
-import { Event } from "../models/event";
-import { Singleton } from "typescript-ioc";
-import { ServiceContext } from "typescript-rest";
+import { Injectable } from '@nestjs/common';
+import { Observable, Subject } from 'rxjs';
+import { Event } from '../models/event';
 
-@Singleton
+@Injectable()
 export class EventService {
-    sse = new SSE();
+  private _eventStream = new Subject<Event>();
 
-    registerClient(context: ServiceContext) {
-        // tslint:disable-next-line:no-console
-        console.log('New client: ');
-        this.sse.init(context.request, context.response, context.next);
-    }
+  get eventStream(): Observable<Event> {
+    return this._eventStream;
+  }
 
-    emit(event: Event) {
-        // tslint:disable-next-line:no-console
-        console.log('Event: ', event);
-
-        this.sse.send(JSON.stringify(event));
-    }
+  emit(event: Event) {
+    // tslint:disable-next-line:no-console
+    console.log('Event: ', event);
+    this._eventStream.next(event);
+  }
 }

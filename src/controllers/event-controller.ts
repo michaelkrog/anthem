@@ -1,20 +1,17 @@
-import { EventService } from "../services/event.service";
-import { Inject } from "typescript-ioc";
-import { Context, GET, Path, ServiceContext } from "typescript-rest";
+import { Controller, Sse } from '@nestjs/common';
+import { map, Observable } from 'rxjs';
+import { EventService } from '../services/event.service';
 
-@Path('/events')
+@Controller('/events')
 export class EventController {
+  constructor(private eventService: EventService) {}
 
-    @Inject
-    eventService: EventService;
-
-    @Context
-    context: ServiceContext;
-
-    @GET
-    stream() {
-        // tslint:disable-next-line:no-console
-        console.log('regsitering client ');
-        this.eventService.registerClient(this.context);
-    }
+  @Sse()
+  sse(): Observable<MessageEvent> {
+    return this.eventService.eventStream.pipe(
+      map((e) => {
+        return { data: e } as MessageEvent;
+      }),
+    );
+  }
 }
